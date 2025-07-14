@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('includes/head') %>
+  <body>
+    <%- include('includes/header') %>
+    <main>
+      <h2>Login</h2>
+
+      <% if (errors && errors.length) { %>
+        <% errors.forEach(err => { %>
+          <p style="color:red;"><%= err %></p>
+        <% }) %>
+      <% } %>
+
+      <form action="/login" method="POST">
+        <fieldset>
+          <legend>Login</legend>
+          <label>Username:</label><br />
+          <input type="text" name="username" /><br />
+
+          <label>Password:</label><br />
+          <input type="password" name="password" /><br /><br />
+
+          <button type="submit">Login</button>
+        </fieldset>
+      </form>
+    </main>
+    <%- include('includes/footer') %>
+  </body>
+</html>

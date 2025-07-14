@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('includes/head') %>
+  <body>
+    <%- include('includes/header') %>
+    <main>
+      <h2>Welcome to Web Reviews</h2>
+      <p>A place for honest reviews</p>
+
+      <% if (errors && errors.length) { %>
+        <% errors.forEach(err => { %>
+          <p style="color:red;"><%= err %></p>
+        <% }) %>
+      <% } %>
+
+      <form action="/register" method="POST">
+        <fieldset>
+          <legend>Register</legend>
+          <label>Username:</label><br />
+          <input type="text" name="username" /><br />
+
+          <label>Email:</label><br />
+          <input type="text" name="email" /><br />
+
+          <label>Password:</label><br />
+          <input type="password" name="password" /><br /><br />
+
+          <button type="submit">Register</button>
+        </fieldset>
+      </form>
+    </main>
+    <%- include('includes/footer') %>
+  </body>
+</html>

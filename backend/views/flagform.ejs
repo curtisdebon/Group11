@@ -1,0 +1,19 @@
+<%- include("includes/head") %>
+<%- include("includes/header") %>
+
+<h2>Flag Post</h2>
+
+<form action="/flag/<%= postId %>" method="POST">
+    <label for="reason">Reason:</label>
+    <select name="reason" id="reason" required>
+        <option value="inappropriate">Inappropriate</option>
+        <option value="spam">Spam</option>
+        <option value="misinformation">Misinformation</option>
+        <option value="other">Other</option>
+    </select>
+
+    <label for="details">Details (optional):</label>
+    <textarea name="details" id="details" rows="4"></textarea>
+
+    <button type="submit">Submit Flag</button>
+</form>
