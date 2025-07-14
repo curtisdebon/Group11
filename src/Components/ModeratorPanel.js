@@ -32,7 +32,7 @@ function ModeratorPanel() {
             <button onClick={() => approveFlag(review.id)}>Approve Flag</button>
           </div>
         ) : review.flagged && review.approved ? (
-          <p key={review.id}>Flag Approved ✅</p>
+          <p key={review.id}>Flag Approved </p>
         ) : null
       )}
     </div>
