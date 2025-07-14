@@ -14,5 +14,5 @@ test('moderator approves a flagged review', () => {
   fireEvent.click(screen.getByText('Approve Flag'));
 
   // Check that the approval message is displayed
-  expect(screen.getByText('Flag Approved ✅')).toBeInTheDocument();
+  expect(screen.getByText('Flag Approved ')).toBeInTheDocument();
 });
