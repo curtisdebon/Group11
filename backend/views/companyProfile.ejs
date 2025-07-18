@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('includes/head') %>
+<body>
+  <%- include('includes/header') %>
+
+  <main>
+    <h2><%= company.name %></h2>
+    <p><strong>Industry:</strong> <%= company.industry || "N/A" %></p>
+    <p><strong>Description:</strong> <%= company.description || "No description yet." %></p>
+
+    <section>
+      <h3>Reviews</h3>
+      <% if (reviews.length > 0) { %>
+        <% reviews.forEach(post => { %>
+          <div class="post">
+            <h4><a href="/post/<%= post.post_id %>"><%= post.title %></a></h4>
+            <p><%= post.content %></p>
+            <p>Rating: <%= post.rating %>/5</p>
+            <p>By: <%= post.username %></p>
+            <p>Votes: 👍 <%= post.upvotes || 0 %> | 👎 <%= post.downvotes || 0 %></p>
+            <p><a href="/flag/<%= post.post_id %>">🚩 Flag</a></p>
+            <hr>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <p>No reviews yet for this company.</p>
+      <% } %>
+    </section>
+  </main>
+
+  <%- include('includes/footer') %>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('includes/head') %>
+<body>
+  <%- include('includes/header') %>
+
+  <main>
+    <h2>Company Dashboard</h2>
+    <p>Reviews about your business:</p>
+
+    <% if (posts.length > 0) { %>
+      <% posts.forEach(post => { %>
+        <div class="post">
+          <h4><%= post.title %></h4>
+          <p><%= post.content %></p>
+          <p>Rating: <%= post.rating %>/5</p>
+
+          <% if (post.response_content) { %>
+            <div class="company-response">
+              <strong>Your Response:</strong>
+              <p><%= post.response_content %></p>
+            </div>
+          <% } else { %>
+            <form action="/respond/<%= post.post_id %>" method="POST">
+              <label for="content">Your response:</label><br>
+              <textarea name="content" rows="3" required></textarea><br>
+              <button type="submit">Post Response</button>
+            </form>
+          <% } %>
+        </div>
+        <hr>
+      <% }) %>
+    <% } else { %>
+      <p>No reviews found for your company.</p>
+    <% } %>
+  </main>
+
+  <%- include('includes/footer') %>
+</body>
+</html>

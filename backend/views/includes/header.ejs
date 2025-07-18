@@ -2,6 +2,7 @@
   <h2><a href="/">Web Review App</a></h2>
   <nav>
     <% if (user) { %>
+      <span>Logged in as: <%= user.role %></span>
       <a href="/logout">Log Out</a>
     <% } else { %>
       <a href="/login">Log In</a>

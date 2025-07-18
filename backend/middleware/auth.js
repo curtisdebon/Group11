@@ -1,25 +1,23 @@
 // middleware/auth.js
+const jwt = require("jsonwebtoken");
 
-// This middleware ensures the user is authenticated
 function ensureAuthenticated(req, res, next) {
-  if (!req.user) {
-    return res.status(401).send("Authentication required.");
+  if (req.user) {
+    return next();
   }
-  next();
+  res.redirect("/");
 }
 
-// This middleware restricts access based on user role
 function requireRole(role) {
-  return function (req, res, next) {
-    if (!req.user || req.user.role !== role) {
-      return res.status(403).send("Forbidden: Insufficient permissions.");
+  return (req, res, next) => {
+    if (req.user && req.user.role === role) {
+      return next();
     }
-    next();
+    return res.status(403).send("Forbidden: Insufficient role");
   };
 }
 
 module.exports = {
   ensureAuthenticated,
-  requireRole
+  requireRole,
 };
-
