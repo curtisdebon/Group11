@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('includes/head') %>
+  <body>
+    <%- include('includes/header') %>
+    <main>
+      <h2>Create Post</h2>
+
+      <% if (errors && errors.length) { %>
+        <% errors.forEach(err => { %>
+          <p style="color:red;"><%= err %></p>
+        <% }) %>
+      <% } %>
+
+      <form action="/createPost" method="POST">
+        <fieldset>
+          <legend>Create Post</legend>
+          <label for="title"><small>Title</small>:</label><br />
+          <input type="text" id="title" name="title" autocomplete="off" /><br />
+
+          <label for="rating"><small>Rating 1-5</small></label><br />
+          <input type="int" id="rating" /><br />
+
+          <label for="body"><small>Content</small></label><br />
+          <textarea name="body" id="body"></textarea> /><br />
+
+          <button type="submit">Post</button>
+        </fieldset>
+      </form>
+    </main>
+    <%- include('includes/footer') %>
+  </body>
+</html>

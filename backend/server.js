@@ -3,6 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
+const sanitizeHTML = require("sanitize-html");
 
 const pool = require("./db");
 const authRoutes = require("./routes/authRoutes");
@@ -201,6 +202,42 @@ app.get("/company/:id", async (req, res) => {
     res.status(500).send("Error loading company page");
   }
 });
+
+//Create Review/Post
+app.get("/createPost", (req, res) => {
+  res.render("createPost")
+})
+
+function sharedPostValidation(req) {
+  const errors = []
+
+  if (typeof req.body.title !== "string") req.body.title = ""
+  if (typeof req.body.rating !== "number") req.body.rating = ""
+  if (!req.body.rating.isInterger) req.body.rating = ""
+  if (req.body.rating < 1 || req.body.rating > 5) req.body.rating = ""
+  if (typeof req.body.body !== "string") req.body.body = ""
+
+  //trim - sanitize or strip out html
+  req.body.title = sanitizeHTML(req.body.title.trim(), {allowedTags: [], allowedAttributes: {}})
+  req.body.body = sanitizeHTML(req.body.body.trim(), {allowedTags: [], allowedAttributes: {}})
+
+  if (!req.body.title) errors.push("Must provide title.")
+  if (!req.body.rating) errors.push("Must provide rating.")
+  if (!req.body.body) errors.push("Must provide content.")
+  return errors
+}
+
+app.post("/createPost", (req, res) => {
+  const errors = sharedPostValidation(req)
+
+  if (errors.length) {
+    return res.render("createPost", {errors})
+  }
+
+  //Save into Database
+  
+
+})
 
 // Start server
 app.listen(3000, () => {
