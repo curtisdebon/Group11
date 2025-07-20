@@ -7,6 +7,7 @@ const jwt = require("jsonwebtoken");
 const pool = require("./db");
 const authRoutes = require("./routes/authRoutes");
 const flagRoutes = require("./routes/flagRoutes");
+const postRoutes = require("./routes/postRoutes"); // ✅ NEW
 const { ensureAuthenticated } = require("./middleware/auth");
 
 const app = express();
@@ -33,6 +34,7 @@ app.use(async (req, res, next) => {
 // Routes
 app.use("/", authRoutes);
 app.use("/", flagRoutes);
+app.use("/", postRoutes); // ✅ NEW
 
 // Homepage
 app.get("/", async (req, res) => {
