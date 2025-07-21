@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import ReviewCard from '../Components/ReviewCard';
 import CompanyResponsePanel from '../Components/CompanyResponsePanel';
 import { useUser } from '../Components/UserContext';
