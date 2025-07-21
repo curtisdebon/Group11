@@ -1,31 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
-  <%- include('includes/head') %>
-  <body>
-    <%- include('includes/header') %>
+<%- include('includes/head') %>
+<body>
+  <%- include('includes/header') %>
 
-    <main>
-      <h2>Welcome to your dashboard</h2>
-      <p>You are now logged in!</p>
+  <main>
+    <h2>Welcome to your dashboard</h2>
+    <p>You are now logged in!</p>
 
-      <section>
-        <h3>Your Feed</h3>
-        <% if (posts && posts.length > 0) { %>
-          <% posts.forEach(post => { %>
-            <div class="post">
-              <h4><%= post.title %></h4>
-              <p><%= post.content %></p>
-              <p>Rating: <%= post.rating %>/5</p>
-              <a href="/flag/<%= post.post_id %>">Flag</a>
-            </div>
-            <hr>
-          <% }) %>
-        <% } else { %>
-          <p>No posts to show.</p>
-        <% } %>
-      </section>
-    </main>
+    <section>
+      <h3>Your Feed</h3>
 
-    <%- include('includes/footer') %>
-  </body>
+      <% if (posts && posts.length > 0) { %>
+        <% posts.forEach(post => { %>
+          <div class="post">
+            <h4><a href="/post/<%= post.post_id %>"><%= post.title %></a></h4>
+            <p><%= post.content %></p>
+            <p>Rating: <%= post.rating %>/5</p>
+            <p>Posted by: <%= post.username %></p>
+            <p>Company: <a href="/company/<%= post.company_id %>"><%= post.company_name %></a></p>
+            <p>
+              Votes: 👍 <%= post.upvotes || 0 %> | 👎 <%= post.downvotes || 0 %>
+            </p>
+
+            <!-- Voting Form -->
+            <form action="/vote/post/<%= post.post_id %>" method="POST" style="display:inline;">
+              <input type="hidden" name="vote_type" value="up">
+              <button type="submit">👍</button>
+            </form>
+            <form action="/vote/post/<%= post.post_id %>" method="POST" style="display:inline;">
+              <input type="hidden" name="vote_type" value="down">
+              <button type="submit">👎</button>
+            </form>
+
+            <!-- Comment Form -->
+            <form action="/comment/<%= post.post_id %>" method="POST">
+              <textarea name="content" rows="2" placeholder="Write a comment..." required></textarea><br>
+              <button type="submit">Post Comment</button>
+            </form>
+
+            <!-- Flag Option -->
+            <p><a href="/flag/<%= post.post_id %>">🚩 Flag this post</a></p>
+          </div>
+          <hr>
+        <% }) %>
+      <% } else { %>
+        <p>No posts to show.</p>
+      <% } %>
+    </section>
+  </main>
+
+  <%- include('includes/footer') %>
+</body>
 </html>

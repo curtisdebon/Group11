@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('includes/head') %>
+<body>
+  <%- include('includes/header') %>
+  <main>
+    <h2>Moderator Dashboard</h2>
+
+    <section>
+      <h3>Flagged Posts</h3>
+      <% if (flaggedPosts.length > 0) { %>
+        <% flaggedPosts.forEach(post => { %>
+          <div class="post">
+            <h4><%= post.title %></h4>
+            <p><%= post.content %></p>
+            <p><strong>Status:</strong> <%= post.status %></p>
+            <p><strong>Reason:</strong> <%= post.reason %></p>
+            <p><strong>Details:</strong> <%= post.details %></p>
+
+            <form action="/moderate/<%= post.flag_id %>/approve" method="POST" style="display:inline;">
+              <button type="submit">✅ Approve</button>
+            </form>
+            <form action="/moderate/<%= post.flag_id %>/remove" method="POST" style="display:inline;">
+              <button type="submit">🗑️ Remove</button>
+            </form>
+            <form action="/moderate/<%= post.flag_id %>/ignore" method="POST" style="display:inline;">
+              <button type="submit">🚫 Ignore</button>
+            </form>
+          </div>
+          <hr>
+        <% }) %>
+      <% } else { %>
+        <p>No flagged posts.</p>
+      <% } %>
+    </section>
+
+    <section>
+      <h3>Flagged Comments</h3>
+      <% if (flaggedComments.length > 0) { %>
+        <% flaggedComments.forEach(comment => { %>
+          <div class="comment">
+            <p><%= comment.content %></p>
+            <p><strong>Status:</strong> <%= comment.status %></p>
+            <p><strong>Reason:</strong> <%= comment.reason %></p>
+            <p><strong>Details:</strong> <%= comment.details %></p>
+
+            <form action="/moderate/<%= comment.flag_id %>/approve" method="POST" style="display:inline;">
+              <button type="submit">✅ Approve</button>
+            </form>
+            <form action="/moderate/<%= comment.flag_id %>/remove" method="POST" style="display:inline;">
+              <button type="submit">🗑️ Remove</button>
+            </form>
+            <form action="/moderate/<%= comment.flag_id %>/ignore" method="POST" style="display:inline;">
+              <button type="submit">🚫 Ignore</button>
+            </form>
+          </div>
+          <hr>
+        <% }) %>
+      <% } else { %>
+        <p>No flagged comments.</p>
+      <% } %>
+    </section>
+  </main>
+  <%- include('includes/footer') %>
+</body>
+</html>

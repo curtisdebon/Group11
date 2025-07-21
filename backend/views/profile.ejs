@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('includes/head') %>
+<body>
+  <%- include('includes/header') %>
+
+  <main>
+    <h2>Your Profile</h2>
+    <p>Welcome back, <%= user.username %>!</p>
+
+    <section>
+      <h3>Your Posts</h3>
+      <% if (posts.length > 0) { %>
+        <% posts.forEach(post => { %>
+          <div class="post">
+            <h4><a href="/post/<%= post.post_id %>"><%= post.title %></a></h4>
+            <p><%= post.content %></p>
+            <p>Rating: <%= post.rating %>/5</p>
+            <p>Status: <%= post.status %></p>
+            <hr>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <p>You haven’t posted anything yet.</p>
+      <% } %>
+    </section>
+
+    <section>
+      <h3>Your Comments</h3>
+      <% if (comments.length > 0) { %>
+        <% comments.forEach(comment => { %>
+          <div class="comment">
+            <p>On <strong><%= comment.title %></strong>: <%= comment.content %></p>
+            <p><small>At: <%= comment.timestamp.toLocaleString() %></small></p>
+            <hr>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <p>You haven’t made any comments yet.</p>
+      <% } %>
+    </section>
+  </main>
+
+  <%- include('includes/footer') %>
+</body>
+</html>
