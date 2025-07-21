@@ -4,6 +4,8 @@ const pool = require("../db");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
+console.log("✅ authRoutes.js loaded");
+
 // Render Login Page
 router.get("/login", (req, res) => {
   res.render("login");
@@ -17,19 +19,36 @@ router.get("/logout", (req, res) => {
 
 // Login POST Handler
 router.post("/login", async (req, res) => {
-  let errors = [];
-  const { username, password } = req.body;
+  console.log("🔐 POST /login hit");
 
-  if (typeof username !== "string" || typeof password !== "string" || username.trim() === "") {
-    errors.push("Invalid username and/or password.");
-    return res.render("login", { errors });
+  const username = req.body.username?.trim();
+  const password = req.body.password;
+
+  console.log("Submitted username:", username);
+  console.log("Submitted password:", password);
+  console.log("Password length:", password.length, "| Raw password:", JSON.stringify(password));
+
+  if (typeof username !== "string" || typeof password !== "string" || username === "") {
+    console.log("❌ Invalid input format.");
+    return res.render("login", { errors: ["Invalid username and/or password."] });
   }
 
   try {
     const [rows] = await pool.execute("SELECT * FROM user WHERE username = ?", [username]);
     const user = rows[0];
 
-    if (!user || !(await bcrypt.compare(password, user.password_hash))) {
+    console.log("User from DB:", user);
+
+    if (!user) {
+      console.log("❌ No user found");
+      return res.render("login", { errors: ["Invalid username and/or password."] });
+    }
+
+    const passwordMatch = await bcrypt.compare(password, user.password_hash);
+    console.log("Password match:", passwordMatch);
+
+    if (!passwordMatch) {
+      console.log("❌ Password mismatch");
       return res.render("login", { errors: ["Invalid username and/or password."] });
     }
 
@@ -42,17 +61,18 @@ router.post("/login", async (req, res) => {
     res.cookie("WebReviews", token, {
       httpOnly: true,
       sameSite: "strict",
-      maxAge: 1000 * 60 * 60 * 24,
+      maxAge: 1000 * 60 * 60 * 24
     });
 
+    console.log("✅ Login successful");
     res.redirect("/dashboard");
   } catch (err) {
-    console.error(err);
+    console.error("🚨 Login error:", err);
     res.render("login", { errors: ["Login failed."] });
   }
 });
 
-// Registration POST Handler
+// Register POST Handler
 router.post("/register", async (req, res) => {
   const { username, email, password } = req.body;
   const errors = [];
@@ -87,15 +107,13 @@ router.post("/register", async (req, res) => {
     res.cookie("WebReviews", token, {
       httpOnly: true,
       sameSite: "strict",
-      maxAge: 1000 * 60 * 60 * 24,
+      maxAge: 1000 * 60 * 60 * 24
     });
 
-    res.redirect("/dashboard");
+    res.redirect("/");
   } catch (err) {
     console.error(err);
-    res.render("homepage", {
-      errors: ["Registration failed. Username or email might already exist."],
-    });
+    res.render("homepage", { errors: ["Registration failed. Username or email might already exist."] });
   }
 });
 
