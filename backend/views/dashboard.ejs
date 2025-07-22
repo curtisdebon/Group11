@@ -8,6 +8,15 @@
     <h2>Welcome to your dashboard</h2>
     <p>You are now logged in!</p>
 
+    <!-- Only consumers can create a review/post -->
+    <% if (user && user.role === 'consumer') { %>
+      <div style="margin-bottom: 1em;">
+        <a href="/createPost" style="padding: 8px 12px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">
+          ✍️ Create a Review
+        </a>
+      </div>
+    <% } %>
+
     <section>
       <h3>Your Feed</h3>
 
@@ -33,11 +42,21 @@
               <button type="submit">👎</button>
             </form>
 
-            <!-- Comment Form -->
-            <form action="/comment/<%= post.post_id %>" method="POST">
-              <textarea name="content" rows="2" placeholder="Write a comment..." required></textarea><br>
-              <button type="submit">Post Comment</button>
-            </form>
+            <!-- Role-Specific Interaction -->
+<% if (user && user.role === 'consumer') { %>
+  <!-- Comment Form for Consumers -->
+  <form action="/comment/<%= post.post_id %>" method="POST">
+    <textarea name="content" rows="2" placeholder="Write a comment..." required></textarea><br>
+    <button type="submit">Post Comment</button>
+  </form>
+<% } else if (user && user.role === 'company') { %>
+  <!-- Response Form for Companies -->
+  <form action="/respond/<%= post.post_id %>" method="POST">
+    <textarea name="content" rows="2" placeholder="Write a response..." required></textarea><br>
+    <button type="submit">Submit Response</button>
+  </form>
+<% } %>
+
 
             <!-- Flag Option -->
             <p><a href="/flag/<%= post.post_id %>">🚩 Flag this post</a></p>

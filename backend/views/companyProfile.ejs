@@ -11,8 +11,8 @@
 
     <section>
       <h3>Reviews</h3>
-      <% if (reviews.length > 0) { %>
-        <% reviews.forEach(post => { %>
+      <% if (posts.length > 0) { %>
+        <% posts.forEach(post => { %>
           <div class="post">
             <h4><a href="/post/<%= post.post_id %>"><%= post.title %></a></h4>
             <p><%= post.content %></p>

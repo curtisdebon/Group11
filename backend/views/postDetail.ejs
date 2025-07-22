@@ -6,64 +6,54 @@
 
   <main>
     <h2><%= post.title %></h2>
-    <p>
-      <strong>By:</strong> <%= post.author %> |
-      <strong>Company:</strong>
-      <a href="/company/<%= post.company_id %>"><%= post.company_name %></a>
-    </p>
+
+    <p><strong>By:</strong> <%= post.username %> | <strong>Company:</strong> <a href="/company/<%= post.company_id %>"><%= post.company_name %></a></p>
     <p><%= post.content %></p>
     <p>Rating: <%= post.rating %>/5</p>
+    <p>Votes: 👍 <%= post.upvotes || 0 %> | 👎 <%= post.downvotes || 0 %></p>
 
-    <!-- Voting -->
-    <form action="/vote/post/<%= post.post_id %>" method="POST" style="display:inline;">
-      <input type="hidden" name="vote_type" value="up">
-      <button type="submit">👍</button>
-    </form>
-    <form action="/vote/post/<%= post.post_id %>" method="POST" style="display:inline;">
-      <input type="hidden" name="vote_type" value="down">
-      <button type="submit">👎</button>
-    </form>
+    <!-- Voting (shown to all logged-in users) -->
+    <% if (user) { %>
+      <form action="/vote/post/<%= post.post_id %>" method="POST" style="display:inline;">
+        <input type="hidden" name="vote_type" value="up">
+        <button type="submit">👍</button>
+      </form>
+      <form action="/vote/post/<%= post.post_id %>" method="POST" style="display:inline;">
+        <input type="hidden" name="vote_type" value="down">
+        <button type="submit">👎</button>
+      </form>
+    <% } %>
 
-    <!-- Flag -->
+    <!-- Flag option -->
     <p><a href="/flag/<%= post.post_id %>">🚩 Flag this post</a></p>
 
-    <% if (response) { %>
-      <div class="company-response">
-        <h4>Company Response:</h4>
-        <p><%= response.content %></p>
-      </div>
+    <!-- Comments section -->
+    <h3>Comments</h3>
+    <% if (comments.length > 0) { %>
+      <% comments.forEach(comment => { %>
+        <p><strong><%= comment.username %>:</strong> <%= comment.content %></p>
+      <% }) %>
+    <% } else { %>
+      <p>No comments yet.</p>
     <% } %>
 
-    <!-- Comments -->
-    <section>
-      <h3>Comments</h3>
-      <% if (comments.length > 0) { %>
-        <% comments.forEach(c => { %>
-          <div class="comment">
-            <p><strong><%= c.username %></strong>: <%= c.content %></p>
-          </div>
-        <% }) %>
-      <% } else { %>
-        <p>No comments yet.</p>
-      <% } %>
-
-      <!-- Add a Comment -->
+    <!-- Comment form for consumers only -->
+    <% if (user && user.role === 'consumer') { %>
       <form action="/comment/<%= post.post_id %>" method="POST">
-        <textarea name="content" rows="3" required placeholder="Write your comment..."></textarea><br>
+        <textarea name="content" rows="2" placeholder="Write your comment..." required></textarea><br>
         <button type="submit">Submit Comment</button>
       </form>
-    </section>
-
-    <!-- Company Response Form -->
-    <% if (user && user.role === 'company' && !response) { %>
-      <section>
-        <h3>Write a Response</h3>
-        <form action="/respond/<%= post.post_id %>" method="POST">
-          <textarea name="content" rows="3" required placeholder="Write your response..."></textarea><br>
-          <button type="submit">Submit Response</button>
-        </form>
-      </section>
     <% } %>
+
+    <!-- Response form for companies only -->
+    <% if (user && user.role === 'company') { %>
+      <h3>Write a Response</h3>
+      <form action="/respond/<%= post.post_id %>" method="POST">
+        <textarea name="content" rows="2" placeholder="Write your response..." required></textarea><br>
+        <button type="submit">Submit Response</button>
+      </form>
+    <% } %>
+
   </main>
 
   <%- include('includes/footer') %>

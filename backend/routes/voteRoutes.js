@@ -1,10 +1,11 @@
+// voteRoutes.js
 const express = require("express");
 const router = express.Router();
 const pool = require("../db");
+const { ensureAuthenticated } = require("../middleware/auth"); 
 
-router.post("/vote/:type/:id", async (req, res) => {
-  if (!req.user) return res.status(403).send("Login required");
-
+// Use ensureAuthenticated as middleware to protect the route
+router.post("/vote/:type/:id", ensureAuthenticated, async (req, res) => {
   const { type, id } = req.params;
   const { vote_type } = req.body;
 
@@ -15,7 +16,7 @@ router.post("/vote/:type/:id", async (req, res) => {
        ON DUPLICATE KEY UPDATE vote_type = ?`,
       [type, id, req.user.user_id, vote_type, vote_type]
     );
-    res.redirect("back");
+    res.redirect(req.get("Referer") || "/dashboard");
   } catch (err) {
     console.error("Vote error:", err);
     res.status(500).send("Vote failed");

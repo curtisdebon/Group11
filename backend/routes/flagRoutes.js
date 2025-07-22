@@ -17,16 +17,16 @@ router.post("/flag/:postId", async (req, res) => {
     if (!req.user) return res.redirect("/login");
 
     try {
+        // Insert into flag table, mark as pending for moderator review
         await pool.execute(
-            `INSERT INTO Flag (target_type, target_id, user_id, reason, details)
-             VALUES ('post', ?, ?, ?, ?)`,
+            `INSERT INTO flag (target_type, target_id, user_id, reason, details, status)
+             VALUES ('post', ?, ?, ?, ?, 'pending')`,
             [postId, req.user.user_id, reason, details]
         );
 
-        await pool.execute(`UPDATE Post SET status = 'flagged' WHERE post_id = ?`, [postId]);
-        res.redirect("/?flagged=success");
+        res.redirect(`/post/${postId}?flagged=success`);
     } catch (err) {
-        console.error(err);
+        console.error("Failed to flag post:", err);
         res.status(500).send("Failed to flag post.");
     }
 });

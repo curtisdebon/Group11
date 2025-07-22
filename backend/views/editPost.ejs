@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('includes/head') %>
+<body>
+  <%- include('includes/header') %>
+  <main>
+    <h2>Edit Post</h2>
+
+    <% if (errors.length > 0) { %>
+      <% errors.forEach(err => { %>
+        <p style="color:red;"><%= err %></p>
+      <% }) %>
+    <% } %>
+
+    <form action="/post/<%= post.post_id %>/edit" method="POST">
+      <label>Title:</label><br>
+      <input type="text" name="title" value="<%= post.title %>" required><br><br>
+
+      <label>Rating (1–5):</label><br>
+      <input type="number" name="rating" value="<%= post.rating %>" min="1" max="5" required><br><br>
+
+      <label>Content:</label><br>
+      <textarea name="body" rows="5" required><%= post.content %></textarea><br><br>
+
+      <button type="submit">Update</button>
+    </form>
+  </main>
+  <%- include('includes/footer') %>
+</body>
+</html>

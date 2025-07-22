@@ -1,47 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
-  <%- include('includes/head') %>
-  <body>
-    <%- include('includes/header') %>
+<%- include('includes/head') %>
+<body>
+  <%- include('includes/header') %>
 
-    <main>
-      <h2>Create a Review</h2>
+  <main>
+    <h2>Create a Review</h2>
 
-      <% if (errors && errors.length) { %>
-        <% errors.forEach(err => { %>
-          <p style="color:red;"><%= err %></p>
-        <% }) %>
+    <% if (errors && errors.length > 0) { %>
+      <% errors.forEach(err => { %>
+        <p style="color:red;"><%= err %></p>
+      <% }) %>
+    <% } %>
+
+    <form action="/createPost" method="POST">
+      <!-- Company Selection -->
+      <% if (company) { %>
+        <p><strong>Reviewing:</strong> <%= company.name %></p>
+        <input type="hidden" name="company_id" value="<%= company.company_id %>">
+      <% } else if (companies) { %>
+        <label>Select a Company:</label><br>
+        <select name="company_id" required>
+          <option value="">-- Select Company --</option>
+          <% companies.forEach(c => { %>
+            <option value="<%= c.company_id %>"><%= c.name %></option>
+          <% }) %>
+        </select><br><br>
       <% } %>
 
-      <form action="/createPost" method="POST">
-        <fieldset>
-          <legend>Write a Review for <%= company.name %></legend>
+      <!-- Title -->
+      <label>Title:</label><br>
+      <input type="text" name="title" required><br><br>
 
-          <!-- Hidden input to preserve company ID -->
-          <input type="hidden" name="company_id" value="<%= company.company_id %>" />
+      <!-- Rating -->
+      <label>Rating (1–5):</label><br>
+      <input type="number" name="rating" min="1" max="5" required><br><br>
 
-          <label for="title">Title:</label><br />
-          <input type="text" id="title" name="title" required /><br /><br />
+      <!-- Content -->
+      <label>Content:</label><br>
+      <textarea name="body" rows="5" required></textarea><br><br>
 
-          <label for="category">Category:</label><br />
-          <select name="category" id="category" required>
-            <option value="review">Review</option>
-            <option value="complaint">Complaint</option>
-            <option value="suggestion">Suggestion</option>
-            <option value="praise">Praise</option>
-          </select><br /><br />
+      <!-- Submit -->
+      <button type="submit">Submit Review</button>
+    </form>
+  </main>
 
-          <label for="rating">Rating (1 to 5):</label><br />
-          <input type="number" id="rating" name="rating" min="1" max="5" required /><br /><br />
-
-          <label for="body">Content:</label><br />
-          <textarea name="body" id="body" rows="5" required></textarea><br /><br />
-
-          <button type="submit">Post</button>
-        </fieldset>
-      </form>
-    </main>
-
-    <%- include('includes/footer') %>
-  </body>
+  <%- include('includes/footer') %>
+</body>
 </html>

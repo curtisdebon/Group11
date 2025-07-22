@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../db");
+const { ensureAuthenticated } = require("../middleware/auth");
 
-router.post("/comment/:postId", async (req, res) => {
-  if (!req.user) return res.redirect("/login");
-
+// Comment on Post with Authentication
+router.post("/comment/:postId", ensureAuthenticated, async (req, res) => {
   const { postId } = req.params;
   const { content } = req.body;
 
